@@ -1,10 +1,10 @@
 package rest
 
 import (
-	domainSend "github.com/aldinokemal/go-whatsapp-web-multidevice/domains/send"
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/pkg/utils"
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/pkg/whatsapp"
 	"github.com/gofiber/fiber/v2"
+	domainSend "main/domains/send"
+	"main/pkg/utils"
+	"main/pkg/whatsapp"
 )
 
 type Send struct {

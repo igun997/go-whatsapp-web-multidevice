@@ -3,14 +3,6 @@ package cmd
 import (
 	"embed"
 	"fmt"
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/config"
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/internal/rest"
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/internal/rest/helpers"
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/internal/rest/middleware"
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/internal/websocket"
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/pkg/utils"
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/pkg/whatsapp"
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/services"
 	"github.com/dustin/go-humanize"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/basicauth"
@@ -21,6 +13,14 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/spf13/cobra"
 	"log"
+	"main/config"
+	"main/internal/rest"
+	"main/internal/rest/helpers"
+	"main/internal/rest/middleware"
+	"main/internal/websocket"
+	"main/pkg/utils"
+	"main/pkg/whatsapp"
+	"main/services"
 	"net/http"
 	"os"
 	"strings"
@@ -34,7 +34,7 @@ var (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Short: "Send free whatsapp API",
-	Long: `This application is from clone https://github.com/aldinokemal/go-whatsapp-web-multidevice, 
+	Long: `This application is from clone https://main, 
 you can send whatsapp over http api but your whatsapp account have to be multi device version`,
 	Run: runRest,
 }

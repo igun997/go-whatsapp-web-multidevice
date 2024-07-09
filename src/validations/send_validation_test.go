@@ -2,10 +2,10 @@ package validations
 
 import (
 	"context"
-	domainMessage "github.com/aldinokemal/go-whatsapp-web-multidevice/domains/message"
-	domainSend "github.com/aldinokemal/go-whatsapp-web-multidevice/domains/send"
-	pkgError "github.com/aldinokemal/go-whatsapp-web-multidevice/pkg/error"
 	"github.com/stretchr/testify/assert"
+	domainMessage "main/domains/message"
+	domainSend "main/domains/send"
+	pkgError "main/pkg/error"
 	"mime/multipart"
 	"testing"
 )

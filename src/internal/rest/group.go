@@ -2,10 +2,10 @@ package rest
 
 import (
 	"fmt"
-	domainGroup "github.com/aldinokemal/go-whatsapp-web-multidevice/domains/group"
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/pkg/utils"
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/pkg/whatsapp"
 	"github.com/gofiber/fiber/v2"
+	domainGroup "main/domains/group"
+	"main/pkg/utils"
+	"main/pkg/whatsapp"
 )
 
 type Group struct {

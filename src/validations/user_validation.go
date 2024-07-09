@@ -2,9 +2,9 @@ package validations
 
 import (
 	"context"
-	domainUser "github.com/aldinokemal/go-whatsapp-web-multidevice/domains/user"
-	pkgError "github.com/aldinokemal/go-whatsapp-web-multidevice/pkg/error"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
+	domainUser "main/domains/user"
+	pkgError "main/pkg/error"
 )
 
 func ValidateUserInfo(ctx context.Context, request domainUser.InfoRequest) error {

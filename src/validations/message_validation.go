@@ -2,10 +2,10 @@ package validations
 
 import (
 	"context"
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/domains/message"
-	domainMessage "github.com/aldinokemal/go-whatsapp-web-multidevice/domains/message"
-	pkgError "github.com/aldinokemal/go-whatsapp-web-multidevice/pkg/error"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
+	"main/domains/message"
+	domainMessage "main/domains/message"
+	pkgError "main/pkg/error"
 )
 
 func ValidateRevokeMessage(ctx context.Context, request domainMessage.RevokeRequest) error {

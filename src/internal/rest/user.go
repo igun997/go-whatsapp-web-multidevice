@@ -1,10 +1,10 @@
 package rest
 
 import (
-	domainUser "github.com/aldinokemal/go-whatsapp-web-multidevice/domains/user"
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/pkg/utils"
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/pkg/whatsapp"
 	"github.com/gofiber/fiber/v2"
+	domainUser "main/domains/user"
+	"main/pkg/utils"
+	"main/pkg/whatsapp"
 )
 
 type User struct {

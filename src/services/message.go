@@ -3,10 +3,6 @@ package services
 import (
 	"context"
 	"fmt"
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/domains/message"
-	domainMessage "github.com/aldinokemal/go-whatsapp-web-multidevice/domains/message"
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/pkg/whatsapp"
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/validations"
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/appstate"
 	"go.mau.fi/whatsmeow/proto/waCommon"
@@ -14,6 +10,10 @@ import (
 	"go.mau.fi/whatsmeow/proto/waSyncAction"
 	"go.mau.fi/whatsmeow/types"
 	"google.golang.org/protobuf/proto"
+	"main/domains/message"
+	domainMessage "main/domains/message"
+	"main/pkg/whatsapp"
+	"main/validations"
 	"time"
 )
 

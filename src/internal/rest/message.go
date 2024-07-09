@@ -1,11 +1,11 @@
 package rest
 
 import (
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/domains/message"
-	domainMessage "github.com/aldinokemal/go-whatsapp-web-multidevice/domains/message"
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/pkg/utils"
-	"github.com/aldinokemal/go-whatsapp-web-multidevice/pkg/whatsapp"
 	"github.com/gofiber/fiber/v2"
+	"main/domains/message"
+	domainMessage "main/domains/message"
+	"main/pkg/utils"
+	"main/pkg/whatsapp"
 )
 
 type Message struct {
