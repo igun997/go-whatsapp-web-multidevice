@@ -1,0 +1,4 @@
+include:
+  - project: siswamedia/services/cicd-script
+    file: default-v1.yml
+
