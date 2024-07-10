@@ -1,7 +1,9 @@
 package services
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/disintegration/imaging"
 	fiberUtils "github.com/gofiber/fiber/v2/utils"
@@ -26,6 +28,72 @@ import (
 type serviceSend struct {
 	WaCli      *whatsmeow.Client
 	appService app.IAppService
+}
+
+func (service serviceSend) SendMessageBird(ctx context.Context, request domainSend.MessageBirdRequest) (response domainSend.GenericResponse, err error) {
+	err = validations.ValidateSendMessageBird(ctx, request)
+	if err != nil {
+		return response, err
+	}
+	//phone should have +62 , if start with 08 add +62
+	phone := request.Phone
+	if phone[0:2] == "08" {
+		phone = "+62" + phone[1:]
+	}
+	payload := map[string]interface{}{
+		"recipient": map[string]interface{}{
+			"contacts": []map[string]interface{}{
+				{
+					"identifierValue": phone,
+					"identifierType":  "phonenumber",
+				},
+			},
+		},
+		"template": map[string]interface{}{
+			"productId": request.TemplateId,
+			"versionId": request.TemplateVersionId,
+			"locale":    "id",
+			"variables": request.Data,
+		},
+	}
+	payloadBytes, err := json.Marshal(payload)
+
+	if err != nil {
+		return response, err
+	}
+	req, err := http.NewRequest("POST", fmt.Sprintf("https://nest.messagebird.com/workspaces/%s/channels/%s/messages", config.Load.MBWorkspaceID, config.Load.MBChannelID), bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		response.Status = fmt.Sprintf("Failed to send message to %s", request.Phone)
+		return response, err
+	}
+
+	// Set headers
+	req.Header.Set("Authorization", fmt.Sprintf("AccessKey %s", config.Load.MBAccessKey))
+	req.Header.Set("Content-Type", "application/json")
+
+	// Create HTTP client
+	client := &http.Client{}
+	// Debugging
+
+	// Send the request
+	resp, err := client.Do(req)
+	if err != nil {
+		response.Status = fmt.Sprintf("Failed to send message to %s", request.Phone)
+		return response, err
+	}
+	defer resp.Body.Close()
+
+	// Read the response body
+	var result interface{}
+	err = json.NewDecoder(resp.Body).Decode(&result)
+	// return the response
+	if err != nil {
+		response.Status = fmt.Sprintf("Failed to send message to %s", request.Phone)
+		return response, err
+	}
+	response.Status = fmt.Sprintf("Message sent to %s", request.Phone)
+	return response, nil
+
 }
 
 func NewSendService(waCli *whatsmeow.Client, appService app.IAppService) domainSend.ISendService {

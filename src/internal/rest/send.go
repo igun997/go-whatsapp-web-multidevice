@@ -14,6 +14,7 @@ type Send struct {
 func InitRestSend(app *fiber.App, service domainSend.ISendService) Send {
 	rest := Send{Service: service}
 	app.Post("/send/message", rest.SendText)
+	app.Post("/send/message/bird", rest.SendMessageBird)
 	app.Post("/send/image", rest.SendImage)
 	app.Post("/send/file", rest.SendFile)
 	app.Post("/send/video", rest.SendVideo)
@@ -24,7 +25,21 @@ func InitRestSend(app *fiber.App, service domainSend.ISendService) Send {
 	app.Post("/send/poll", rest.SendPoll)
 	return rest
 }
+func (controller *Send) SendMessageBird(c *fiber.Ctx) error {
+	var request domainSend.MessageBirdRequest
+	err := c.BodyParser(&request)
+	utils.PanicIfNeeded(err)
 
+	response, err := controller.Service.SendMessageBird(c.UserContext(), request)
+	utils.PanicIfNeeded(err)
+
+	return c.JSON(utils.ResponseData{
+		Status:  200,
+		Code:    "SUCCESS",
+		Message: response.Status,
+		Results: response,
+	})
+}
 func (controller *Send) SendText(c *fiber.Ctx) error {
 	var request domainSend.MessageRequest
 	err := c.BodyParser(&request)
