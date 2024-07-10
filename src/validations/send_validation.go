@@ -23,6 +23,20 @@ func ValidateSendMessage(ctx context.Context, request domainSend.MessageRequest)
 	return nil
 }
 
+func ValidateSendMessageBird(ctx context.Context, request domainSend.MessageBirdRequest) error {
+	err := validation.ValidateStructWithContext(ctx, &request,
+		validation.Field(&request.TemplateId, validation.Required),
+		validation.Field(&request.TemplateVersionId, validation.Required),
+		validation.Field(&request.Data, validation.Required),
+		validation.Field(&request.Phone, validation.Required),
+	)
+
+	if err != nil {
+		return pkgError.ValidationError(err.Error())
+	}
+	return nil
+}
+
 func ValidateSendImage(ctx context.Context, request domainSend.ImageRequest) error {
 	err := validation.ValidateStructWithContext(ctx, &request,
 		validation.Field(&request.Phone, validation.Required),

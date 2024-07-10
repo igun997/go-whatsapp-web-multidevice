@@ -10,6 +10,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/template/html/v2"
+	"github.com/ilyakaznacheev/cleanenv"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/spf13/cobra"
 	"log"
@@ -50,6 +51,10 @@ func init() {
 }
 
 func runRest(_ *cobra.Command, _ []string) {
+	if err := cleanenv.ReadConfig("config.yaml", &config.Load); err != nil {
+		log.Fatalln(err)
+	}
+
 	if config.AppDebug {
 		config.WhatsappLogLevel = "DEBUG"
 	}
