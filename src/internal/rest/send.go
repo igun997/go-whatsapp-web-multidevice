@@ -1,8 +1,10 @@
 package rest
 
 import (
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	domainSend "main/domains/send"
+	"main/internal/websocket"
 	"main/pkg/utils"
 	"main/pkg/whatsapp"
 )
@@ -14,6 +16,7 @@ type Send struct {
 func InitRestSend(app *fiber.App, service domainSend.ISendService) Send {
 	rest := Send{Service: service}
 	app.Post("/send/message", rest.SendText)
+	app.Post("/send/bulk-message", rest.SendBulkMessage)
 	app.Post("/send/message/bird", rest.SendMessageBird)
 	app.Post("/send/image", rest.SendImage)
 	app.Post("/send/file", rest.SendFile)
@@ -24,6 +27,35 @@ func InitRestSend(app *fiber.App, service domainSend.ISendService) Send {
 	app.Post("/send/audio", rest.SendAudio)
 	app.Post("/send/poll", rest.SendPoll)
 	return rest
+}
+func (controller *Send) SendBulkMessage(c *fiber.Ctx) error {
+	var request domainSend.BulkMessageRequest
+	err := c.BodyParser(&request)
+	utils.PanicIfNeeded(err)
+
+	// Create progress channel
+	progress := make(chan domainSend.BulkMessageProgress)
+
+	// Create websocket broadcast channel for progress updates
+	go func() {
+		for p := range progress {
+			websocket.Broadcast <- websocket.BroadcastMessage{
+				Code:    "BULK_PROGRESS",
+				Message: fmt.Sprintf("Processing %d/%d", p.Completed, p.Total),
+				Result:  p,
+			}
+		}
+	}()
+
+	responses, err := controller.Service.SendBulkMessage(c.Context(), request, progress)
+	utils.PanicIfNeeded(err)
+
+	return c.JSON(utils.ResponseData{
+		Status:  200,
+		Code:    "SUCCESS",
+		Message: "Bulk messages sent",
+		Results: responses,
+	})
 }
 func (controller *Send) SendMessageBird(c *fiber.Ctx) error {
 	var request domainSend.MessageBirdRequest

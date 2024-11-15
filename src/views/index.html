@@ -52,6 +52,7 @@
 
     <div class="ui three column doubling grid cards">
         <send-message></send-message>
+        <send-bulk-message></send-bulk-message>
         <send-image></send-image>
         <send-file max-file-size="{{ .MaxFileSize }}"></send-file>
 
@@ -148,6 +149,7 @@
     import AccountAvatar from "./components/AccountAvatar.js";
     import AccountUserInfo from "./components/AccountUserInfo.js";
     import AccountPrivacy from "./components/AccountPrivacy.js";
+    import SendBulkMessage from "./components/SendBulkMessage.js";
 
     const showErrorInfo = (message) => {
         $('body').toast({
@@ -174,7 +176,7 @@
             SendMessage, SendImage, SendFile, SendVideo, SendContact, SendLocation, SendAudio, SendPoll,
             MessageDelete, MessageUpdate, MessageReact, MessageRevoke,
             GroupList, GroupCreate, GroupJoinWithLink, GroupAddParticipants,
-            AccountAvatar, AccountUserInfo, AccountPrivacy
+            AccountAvatar, AccountUserInfo, AccountPrivacy, SendBulkMessage
         },
         delimiters: ['[[', ']]'],
         data() {
@@ -209,6 +211,9 @@
 
                             // fetch devices
                             this.handleReloadDevice()
+                            break;
+                        case 'BULK_PROGRESS':
+                            this.$refs.bulkMessage?.updateProgress(message.result)
                             break;
                         case 'LIST_DEVICES':
                             this.connected_devices = message.result

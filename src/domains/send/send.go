@@ -15,6 +15,7 @@ type ISendService interface {
 	SendAudio(ctx context.Context, request AudioRequest) (response GenericResponse, err error)
 	SendPoll(ctx context.Context, request PollRequest) (response GenericResponse, err error)
 	SendMessageBird(ctx context.Context, request MessageBirdRequest) (response GenericResponse, err error)
+	SendBulkMessage(ctx context.Context, request BulkMessageRequest, progress chan<- BulkMessageProgress) ([]BulkMessageResponse, error)
 }
 
 type GenericResponse struct {

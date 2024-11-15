@@ -30,6 +30,51 @@ type serviceSend struct {
 	appService app.IAppService
 }
 
+func (service serviceSend) SendBulkMessage(ctx context.Context, request domainSend.BulkMessageRequest, progress chan<- domainSend.BulkMessageProgress) ([]domainSend.BulkMessageResponse, error) {
+	var responses []domainSend.BulkMessageResponse
+	total := len(request.Phones)
+
+	for i, phone := range request.Phones {
+		// Send progress update
+		progress <- domainSend.BulkMessageProgress{
+			Total:     total,
+			Completed: i,
+			Current:   phone,
+			Status:    "processing",
+		}
+
+		// Send message
+		msgReq := domainSend.MessageRequest{
+			Phone:   phone,
+			Message: request.Message,
+		}
+
+		resp, err := service.SendText(ctx, msgReq)
+		if err != nil {
+			responses = append(responses, domainSend.BulkMessageResponse{
+				Phone:  phone,
+				Status: "failed: " + err.Error(),
+			})
+			continue
+		}
+
+		responses = append(responses, domainSend.BulkMessageResponse{
+			MessageID: resp.MessageID,
+			Phone:     phone,
+			Status:    "success",
+		})
+	}
+
+	// Send final progress
+	progress <- domainSend.BulkMessageProgress{
+		Total:     total,
+		Completed: total,
+		Status:    "completed",
+	}
+
+	return responses, nil
+}
+
 func (service serviceSend) SendMessageBird(ctx context.Context, request domainSend.MessageBirdRequest) (response domainSend.GenericResponse, err error) {
 	err = validations.ValidateSendMessageBird(ctx, request)
 	if err != nil {
